@@ -17,4 +17,11 @@ describe('API', () => {
     })
     expect(users).toBeDefined()
   })
+
+  it('fetches media', async () => {
+    const media = await payload.find({
+      collection: 'media',
+    })
+    expect(media).toBeDefined()
+  })
 })
