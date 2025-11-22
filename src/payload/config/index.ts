@@ -1,3 +1,4 @@
 export * from './collectionts'
 export * from './admin'
 export * from './database'
+export * from './graphQL'

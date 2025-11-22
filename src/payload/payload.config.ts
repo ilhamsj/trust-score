@@ -4,7 +4,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import sharp from 'sharp'
 
-import { collectionConfig, adminConfig, databaseAdapter } from './config'
+import { collectionConfig, adminConfig, databaseAdapter, graphQLConfig } from './config'
 import { env } from '@/shared/env'
 
 const filename = fileURLToPath(import.meta.url)
@@ -15,6 +15,7 @@ export default buildConfig({
   collections: collectionConfig,
   db: databaseAdapter,
   editor: lexicalEditor(),
+  graphQL: graphQLConfig,
   secret: env.APP_SECRET,
   sharp,
   typescript: {
