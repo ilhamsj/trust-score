@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { slugField } from 'payload'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
@@ -17,6 +18,7 @@ export const Articles: CollectionConfig = {
       type: 'text',
       required: true,
     },
+    slugField(),
     {
       name: 'content',
       type: 'richText',
@@ -29,12 +31,18 @@ export const Articles: CollectionConfig = {
       hasMany: false,
       required: true,
       defaultValue: ({ user }) => user,
+      admin: {
+        position: 'sidebar',
+      },
     },
     {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
       hasMany: false,
+      admin: {
+        position: 'sidebar',
+      },
     },
     {
       name: 'publishedAt',
@@ -45,6 +53,7 @@ export const Articles: CollectionConfig = {
           minDate: new Date(),
         },
         readOnly: true,
+        position: 'sidebar',
       },
     },
   ],
