@@ -1,11 +1,11 @@
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import path from 'path'
 import sharp from 'sharp'
 
-import { collectionConfig, adminConfig } from './config'
+import { collectionConfig, adminConfig, databaseAdapter } from './config'
+import { env } from '@/shared/env'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -13,13 +13,11 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: adminConfig,
   collections: collectionConfig,
+  db: databaseAdapter,
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: env.APP_SECRET,
+  sharp,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: mongooseAdapter({
-    url: process.env.DATABASE_URI || '',
-  }),
-  sharp,
 })
