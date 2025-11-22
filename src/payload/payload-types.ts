@@ -111,6 +111,7 @@ export interface Config {
   jobs: {
     tasks: {
       taskSendingEmail: TaskTaskSendingEmail;
+      schedulePublish: TaskSchedulePublish;
       inline: {
         input: unknown;
         output: unknown;
@@ -168,6 +169,7 @@ export interface Article {
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -318,7 +320,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'taskSendingEmail';
+        taskSlug: 'inline' | 'taskSendingEmail' | 'schedulePublish';
         taskID: string;
         input?:
           | {
@@ -352,7 +354,7 @@ export interface PayloadJob {
       }[]
     | null;
   workflowSlug?: 'workflowNewUser' | null;
-  taskSlug?: ('inline' | 'taskSendingEmail') | null;
+  taskSlug?: ('inline' | 'taskSendingEmail' | 'schedulePublish') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -495,6 +497,7 @@ export interface ArticlesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -700,6 +703,23 @@ export interface TaskTaskSendingEmail {
   output: {
     message: string;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskSchedulePublish".
+ */
+export interface TaskSchedulePublish {
+  input: {
+    type?: ('publish' | 'unpublish') | null;
+    locale?: string | null;
+    doc?: {
+      relationTo: 'articles';
+      value: string | Article;
+    } | null;
+    global?: string | null;
+    user?: (string | null) | User;
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

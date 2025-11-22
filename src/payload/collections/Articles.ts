@@ -5,7 +5,12 @@ export const Articles: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
   },
-  versions: true,
+  versions: {
+    drafts: {
+      autosave: true,
+      schedulePublish: true,
+    },
+  },
   fields: [
     {
       name: 'title',
