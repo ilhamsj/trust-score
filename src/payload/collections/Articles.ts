@@ -13,7 +13,15 @@ export const Articles: CollectionConfig = {
     },
   },
   fields: [
-    slugField({ fieldToUse: 'title' }),
+    slugField({
+      fieldToUse: 'title',
+      overrides: (field) => {
+        return {
+          ...field,
+          unique: true,
+        }
+      },
+    }),
     {
       name: 'title',
       type: 'text',
