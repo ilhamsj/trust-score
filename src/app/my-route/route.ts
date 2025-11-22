@@ -1,4 +1,4 @@
-import configPromise from '@/payload/payload.config'
+import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 export const GET = async (request: Request) => {
@@ -6,7 +6,11 @@ export const GET = async (request: Request) => {
     config: configPromise,
   })
 
-  return Response.json({
-    message: 'This is an example of a custom route.',
+  payload.logger.info(Object.keys(request.headers))
+
+  const items = await payload.find({
+    collection: 'users',
   })
+
+  return Response.json(items)
 }
