@@ -50,6 +50,13 @@ export const Articles: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
+      filterOptions: () => {
+        return {
+          mimeType: {
+            contains: 'image',
+          },
+        }
+      },
     },
     {
       name: 'publishedAt',
