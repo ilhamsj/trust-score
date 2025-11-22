@@ -13,12 +13,12 @@ export const Articles: CollectionConfig = {
     },
   },
   fields: [
+    slugField({ fieldToUse: 'title' }),
     {
       name: 'title',
       type: 'text',
       required: true,
     },
-    slugField(),
     {
       name: 'content',
       type: 'richText',
@@ -29,11 +29,10 @@ export const Articles: CollectionConfig = {
       type: 'relationship',
       relationTo: 'users',
       hasMany: false,
-      required: true,
-      defaultValue: ({ user }) => user,
       admin: {
         position: 'sidebar',
       },
+      defaultValue: ({ user }) => user?.id ?? null,
     },
     {
       name: 'image',

@@ -2,13 +2,13 @@ import { Users, Media, Articles } from '@/payload/collections'
 import { CollectionConfig } from 'payload'
 
 const access: CollectionConfig['access'] = {
-  admin: () => true,
+  admin: ({ req }) => req.user?.id !== undefined,
+  readVersions: ({ req }) => req.user?.id !== undefined,
+  unlock: ({ req }) => req.user?.id !== undefined,
   create: () => true,
-  delete: () => true,
   read: () => true,
-  readVersions: () => true,
-  unlock: () => true,
   update: () => true,
+  delete: () => true,
 }
 
 export const collectionConfig: CollectionConfig[] = [Articles, Media, Users].map<CollectionConfig>(
@@ -18,8 +18,8 @@ export const collectionConfig: CollectionConfig[] = [Articles, Media, Users].map
       ...collection.access,
       ...access,
     },
+    ...(['media', 'articles'].includes(collection.slug) && { folders: true }),
     enableQueryPresets: true,
-    folders: true,
     trash: true,
   }),
 )

@@ -80,7 +80,7 @@ export interface Config {
   };
   collectionsJoins: {
     'payload-folders': {
-      documentsAndFolders: 'payload-folders' | 'articles' | 'media' | 'users';
+      documentsAndFolders: 'payload-folders' | 'articles' | 'media';
     };
   };
   collectionsSelect: {
@@ -146,12 +146,12 @@ export interface UserAuthOperations {
  */
 export interface Article {
   id: string;
-  title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
+  title: string;
   content: {
     root: {
       type: string;
@@ -167,7 +167,7 @@ export interface Article {
     };
     [k: string]: unknown;
   };
-  author: string | User;
+  author?: (string | null) | User;
   image?: (string | null) | Media;
   publishedAt?: string | null;
   folder?: (string | null) | FolderInterface;
@@ -182,7 +182,6 @@ export interface Article {
  */
 export interface User {
   id: string;
-  folder?: (string | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -201,6 +200,26 @@ export interface User {
       }[]
     | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  folder?: (string | null) | FolderInterface;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -224,37 +243,13 @@ export interface FolderInterface {
           relationTo?: 'media';
           value: string | Media;
         }
-      | {
-          relationTo?: 'users';
-          value: string | User;
-        }
     )[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  folderType?: ('articles' | 'media' | 'users')[] | null;
+  folderType?: ('articles' | 'media')[] | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -493,9 +488,9 @@ export interface PayloadQueryPreset {
  * via the `definition` "articles_select".
  */
 export interface ArticlesSelect<T extends boolean = true> {
-  title?: T;
   generateSlug?: T;
   slug?: T;
+  title?: T;
   content?: T;
   author?: T;
   image?: T;
@@ -530,7 +525,6 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  folder?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
