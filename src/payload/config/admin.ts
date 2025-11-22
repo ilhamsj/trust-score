@@ -14,4 +14,7 @@ export const adminConfig: Config['admin'] = {
   meta: {
     titleSuffix: `- ${env.APP_NAME}`,
   },
+  timezones: {
+    defaultTimezone: 'Asia/Jakarta',
+  },
 }
