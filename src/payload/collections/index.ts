@@ -1,3 +1,6 @@
-export * from './Media'
-export * from './Users'
-export * from './Articles'
+import { Articles } from './Articles'
+import { Media } from './Media'
+import { Accounts, Sessions, Verifications, Users } from './auth'
+import { Roles } from './Roles'
+
+export default [Articles, Media, Users, Accounts, Sessions, Verifications, Roles]
