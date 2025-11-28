@@ -1,6 +1,6 @@
 networks:
-  trust-score:
-    driver: bridge
+  universe:
+    external: true
 
 services:
   payload:
@@ -23,7 +23,7 @@ services:
     ports:
       - 3000:3000
     networks:
-      - trust-score
+      - universe
 
   mongo:
     image: mongo:latest
@@ -33,7 +33,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     networks:
-      - trust-score
+      - universe
     ports:
       - 27017:27017
 
@@ -47,4 +47,4 @@ services:
     ports:
       - 8081:8081
     networks:
-      - trust-score
+      - universe
