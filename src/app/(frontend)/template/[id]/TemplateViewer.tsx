@@ -1,16 +1,15 @@
 'use client'
 
-import React from 'react'
-import DOMPurify from 'dompurify'
+import { useEffect, useState } from 'react'
 
 export default function TemplateViewer({ code }: { code: string }) {
-  const sanitizedHtml = DOMPurify.sanitize(code)
+  const [html, setHtml] = useState<string>('')
+
+  useEffect(() => {
+    setHtml(code)
+  }, [code])
 
   return (
-    <div
-      style={{ width: '100%', height: '100%' }}
-      suppressHydrationWarning={true}
-      dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-    />
+    <div style={{ width: '100%', minHeight: '100vh' }} dangerouslySetInnerHTML={{ __html: html }} />
   )
 }

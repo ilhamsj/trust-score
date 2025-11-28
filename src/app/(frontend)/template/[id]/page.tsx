@@ -12,8 +12,9 @@ type Props = {
 
 export default async function page(props: Props) {
   const { id } = await props.params
+
   const payload = await getPayload({ config })
-  const template = await payload.findByID({ collection: 'templates', id })
+  const template = await payload.findByID({ collection: 'templates', id: id })
 
   if (!template) notFound()
   if (template.code === null) notFound()
