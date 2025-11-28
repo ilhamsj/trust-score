@@ -68,17 +68,17 @@ export interface Config {
   blocks: {};
   collections: {
     accounts: Account;
-    articles: Article;
+    activities: Activity;
     contacts: Contact;
     media: Media;
     properties: Property;
     roles: Role;
     segments: Segment;
     sessions: Session;
+    settings: Setting;
     templates: Template;
     users: User;
     verifications: Verification;
-    activities: Activity;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -93,22 +93,22 @@ export interface Config {
       sessions: 'sessions';
     };
     'payload-folders': {
-      documentsAndFolders: 'payload-folders' | 'articles' | 'media';
+      documentsAndFolders: 'payload-folders' | 'media';
     };
   };
   collectionsSelect: {
     accounts: AccountsSelect<false> | AccountsSelect<true>;
-    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    activities: ActivitiesSelect<false> | ActivitiesSelect<true>;
     contacts: ContactsSelect<false> | ContactsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     properties: PropertiesSelect<false> | PropertiesSelect<true>;
     roles: RolesSelect<false> | RolesSelect<true>;
     segments: SegmentsSelect<false> | SegmentsSelect<true>;
     sessions: SessionsSelect<false> | SessionsSelect<true>;
+    settings: SettingsSelect<false> | SettingsSelect<true>;
     templates: TemplatesSelect<false> | TemplatesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     verifications: VerificationsSelect<false> | VerificationsSelect<true>;
-    activities: ActivitiesSelect<false> | ActivitiesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -245,89 +245,15 @@ export interface Session {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles".
+ * via the `definition` "activities".
  */
-export interface Article {
+export interface Activity {
   id: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  title: string;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  author?: (string | null) | User;
-  image?: (string | null) | Media;
-  publishedAt?: string | null;
-  folder?: (string | null) | FolderInterface;
+  contact?: (string | Contact)[] | null;
+  activityType: 'click' | 'open' | 'view' | 'send' | 'receive' | 'other';
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  folder?: (string | null) | FolderInterface;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-folders".
- */
-export interface FolderInterface {
-  id: string;
-  name: string;
-  folder?: (string | null) | FolderInterface;
-  documentsAndFolders?: {
-    docs?: (
-      | {
-          relationTo?: 'payload-folders';
-          value: string | FolderInterface;
-        }
-      | {
-          relationTo?: 'articles';
-          value: string | Article;
-        }
-      | {
-          relationTo?: 'media';
-          value: string | Media;
-        }
-    )[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  folderType?: ('articles' | 'media')[] | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -369,6 +295,65 @@ export interface Property {
 export interface Segment {
   id: string;
   name: string;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  folder?: (string | null) | FolderInterface;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-folders".
+ */
+export interface FolderInterface {
+  id: string;
+  name: string;
+  folder?: (string | null) | FolderInterface;
+  documentsAndFolders?: {
+    docs?: (
+      | {
+          relationTo?: 'payload-folders';
+          value: string | FolderInterface;
+        }
+      | {
+          relationTo?: 'media';
+          value: string | Media;
+        }
+    )[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  folderType?: 'media'[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
+export interface Setting {
+  id: string;
+  general: {
+    name: string;
+  };
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -424,18 +409,6 @@ export interface Verification {
     | boolean
     | null;
   expiresAt: string;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "activities".
- */
-export interface Activity {
-  id: string;
-  contact?: (string | Contact)[] | null;
-  activityType: 'click' | 'open' | 'view' | 'send' | 'receive' | 'other';
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -571,8 +544,8 @@ export interface PayloadLockedDocument {
         value: string | Account;
       } | null)
     | ({
-        relationTo: 'articles';
-        value: string | Article;
+        relationTo: 'activities';
+        value: string | Activity;
       } | null)
     | ({
         relationTo: 'contacts';
@@ -599,6 +572,10 @@ export interface PayloadLockedDocument {
         value: string | Session;
       } | null)
     | ({
+        relationTo: 'settings';
+        value: string | Setting;
+      } | null)
+    | ({
         relationTo: 'templates';
         value: string | Template;
       } | null)
@@ -609,10 +586,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'verifications';
         value: string | Verification;
-      } | null)
-    | ({
-        relationTo: 'activities';
-        value: string | Activity;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -702,17 +675,17 @@ export interface PayloadQueryPreset {
     | null;
   relatedCollection:
     | 'accounts'
-    | 'articles'
+    | 'activities'
     | 'contacts'
     | 'media'
     | 'properties'
     | 'roles'
     | 'segments'
     | 'sessions'
+    | 'settings'
     | 'templates'
     | 'users'
-    | 'verifications'
-    | 'activities';
+    | 'verifications';
   /**
    * This is a temporary field used to determine if updating the preset would remove the user's access to it. When `true`, this record will be deleted after running the preset's `validate` function.
    */
@@ -741,21 +714,14 @@ export interface AccountsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles_select".
+ * via the `definition` "activities_select".
  */
-export interface ArticlesSelect<T extends boolean = true> {
-  generateSlug?: T;
-  slug?: T;
-  title?: T;
-  content?: T;
-  author?: T;
-  image?: T;
-  publishedAt?: T;
-  folder?: T;
+export interface ActivitiesSelect<T extends boolean = true> {
+  contact?: T;
+  activityType?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
-  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -857,6 +823,20 @@ export interface SessionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings_select".
+ */
+export interface SettingsSelect<T extends boolean = true> {
+  general?:
+    | T
+    | {
+        name?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "templates_select".
  */
 export interface TemplatesSelect<T extends boolean = true> {
@@ -895,17 +875,6 @@ export interface VerificationsSelect<T extends boolean = true> {
   identifier?: T;
   value?: T;
   expiresAt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "activities_select".
- */
-export interface ActivitiesSelect<T extends boolean = true> {
-  contact?: T;
-  activityType?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -1080,15 +1049,10 @@ export interface TaskSchedulePublish {
   input: {
     type?: ('publish' | 'unpublish') | null;
     locale?: string | null;
-    doc?:
-      | ({
-          relationTo: 'articles';
-          value: string | Article;
-        } | null)
-      | ({
-          relationTo: 'templates';
-          value: string | Template;
-        } | null);
+    doc?: {
+      relationTo: 'templates';
+      value: string | Template;
+    } | null;
     global?: string | null;
     user?: (string | null) | User;
   };
