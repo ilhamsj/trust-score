@@ -22,6 +22,28 @@ services:
       - /app/.next
     ports:
       - 3000:3000
+    environment:
+      # Application
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_NAME=${APP_NAME:-Payload}
+      - APP_URL=${APP_URL:-http://localhost:3000}
+      - APP_SECRET=${APP_SECRET:-dummies}
+      # Database
+      - DATABASE_URI=${DATABASE_URI:-mongodb://root:root@mongo:27017/trust-score}
+      # SMTP Configuration (defaults to mailpit on port 1025 with STARTTLS + auth)
+      - SMTP_HOST=${SMTP_HOST:-mailpit}
+      - SMTP_PORT=${SMTP_PORT:-1025}
+      - SMTP_USER=${SMTP_USER:-root}
+      - SMTP_PASS=${SMTP_PASS:-root}
+      - SMTP_FROM_ADDRESS=${SMTP_FROM_ADDRESS:-info@payloadcms.com}
+      - SMTP_FROM_NAME=${SMTP_FROM_NAME:-Payload}
+      - SMTP_SECURE=${SMTP_SECURE:-false}
+      - SMTP_IGNORE_TLS=${SMTP_IGNORE_TLS:-false}
+      # Google OAuth
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+      # Jobs
+      - JOBS_DELETE_ON_COMPLETE=${JOBS_DELETE_ON_COMPLETE:-false}
     networks:
       - universe
 
@@ -30,12 +52,10 @@ services:
     container_name: mongo
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
     networks:
       - universe
-    ports:
-      - 27017:27017
 
   mongo-express:
     image: mongo-express

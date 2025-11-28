@@ -67,18 +67,15 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    accounts: Account;
     activities: Activity;
     contacts: Contact;
     media: Media;
     properties: Property;
     roles: Role;
     segments: Segment;
-    sessions: Session;
     settings: Setting;
     templates: Template;
     users: User;
-    verifications: Verification;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -88,27 +85,20 @@ export interface Config {
     'payload-query-presets': PayloadQueryPreset;
   };
   collectionsJoins: {
-    users: {
-      accounts: 'accounts';
-      sessions: 'sessions';
-    };
     'payload-folders': {
       documentsAndFolders: 'payload-folders' | 'media';
     };
   };
   collectionsSelect: {
-    accounts: AccountsSelect<false> | AccountsSelect<true>;
     activities: ActivitiesSelect<false> | ActivitiesSelect<true>;
     contacts: ContactsSelect<false> | ContactsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     properties: PropertiesSelect<false> | PropertiesSelect<true>;
     roles: RolesSelect<false> | RolesSelect<true>;
     segments: SegmentsSelect<false> | SegmentsSelect<true>;
-    sessions: SessionsSelect<false> | SessionsSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
     templates: TemplatesSelect<false> | TemplatesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
-    verifications: VerificationsSelect<false> | VerificationsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -120,6 +110,7 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
+  fallbackLocale: null;
   globals: {
     'payload-jobs-stats': PayloadJobsStat;
   };
@@ -161,87 +152,6 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "accounts".
- */
-export interface Account {
-  id: string;
-  userId: string | User;
-  accountId: string;
-  providerId: string;
-  accessToken?: string | null;
-  refreshToken?: string | null;
-  accessTokenExpiresAt?: string | null;
-  refreshTokenExpiresAt?: string | null;
-  scope?: string | null;
-  idToken?: string | null;
-  password?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: string;
-  name?: string | null;
-  email?: string | null;
-  emailVerified?: boolean | null;
-  image?: string | null;
-  roles?: (string | Role)[] | null;
-  accounts?: {
-    docs?: (string | Account)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  sessions?: {
-    docs?: (string | Session)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "roles".
- */
-export interface Role {
-  id: string;
-  name: string;
-  permissions: {
-    collectionName: 'articles' | 'media' | 'users' | 'accounts' | 'sessions' | 'verifications';
-    access?: {
-      create?: boolean | null;
-      read?: boolean | null;
-      update?: boolean | null;
-      destroy?: boolean | null;
-    };
-    id?: string | null;
-  }[];
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sessions".
- */
-export interface Session {
-  id: string;
-  userId: string | User;
-  token: string;
-  expiresAt: string;
-  ipAddress?: string | null;
-  userAgent?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -347,6 +257,27 @@ export interface FolderInterface {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles".
+ */
+export interface Role {
+  id: string;
+  name: string;
+  permissions: {
+    collectionName: 'articles' | 'media' | 'users' | 'accounts' | 'sessions' | 'verifications';
+    access?: {
+      create?: boolean | null;
+      read?: boolean | null;
+      update?: boolean | null;
+      destroy?: boolean | null;
+    };
+    id?: string | null;
+  }[];
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings".
  */
 export interface Setting {
@@ -382,24 +313,31 @@ export interface Template {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "verifications".
+ * via the `definition` "users".
  */
-export interface Verification {
+export interface User {
   id: string;
-  identifier: string;
-  value:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  expiresAt: string;
+  name?: string | null;
+  image?: string | null;
+  roles?: (string | Role)[] | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -528,10 +466,6 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
-        relationTo: 'accounts';
-        value: string | Account;
-      } | null)
-    | ({
         relationTo: 'activities';
         value: string | Activity;
       } | null)
@@ -556,10 +490,6 @@ export interface PayloadLockedDocument {
         value: string | Segment;
       } | null)
     | ({
-        relationTo: 'sessions';
-        value: string | Session;
-      } | null)
-    | ({
         relationTo: 'settings';
         value: string | Setting;
       } | null)
@@ -570,10 +500,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
-      } | null)
-    | ({
-        relationTo: 'verifications';
-        value: string | Verification;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -662,43 +588,21 @@ export interface PayloadQueryPreset {
     | boolean
     | null;
   relatedCollection:
-    | 'accounts'
     | 'activities'
     | 'contacts'
     | 'media'
     | 'properties'
     | 'roles'
     | 'segments'
-    | 'sessions'
     | 'settings'
     | 'templates'
-    | 'users'
-    | 'verifications';
+    | 'users';
   /**
    * This is a temporary field used to determine if updating the preset would remove the user's access to it. When `true`, this record will be deleted after running the preset's `validate` function.
    */
   isTemp?: boolean | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "accounts_select".
- */
-export interface AccountsSelect<T extends boolean = true> {
-  userId?: T;
-  accountId?: T;
-  providerId?: T;
-  accessToken?: T;
-  refreshToken?: T;
-  accessTokenExpiresAt?: T;
-  refreshTokenExpiresAt?: T;
-  scope?: T;
-  idToken?: T;
-  password?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -797,20 +701,6 @@ export interface SegmentsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sessions_select".
- */
-export interface SessionsSelect<T extends boolean = true> {
-  userId?: T;
-  token?: T;
-  expiresAt?: T;
-  ipAddress?: T;
-  userAgent?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
@@ -852,27 +742,25 @@ export interface TemplatesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
-  email?: T;
-  emailVerified?: T;
   image?: T;
   roles?: T;
-  accounts?: T;
-  sessions?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "verifications_select".
- */
-export interface VerificationsSelect<T extends boolean = true> {
-  identifier?: T;
-  value?: T;
-  expiresAt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

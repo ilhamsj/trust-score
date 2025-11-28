@@ -17,7 +17,4 @@ export const adminConfig: Config['admin'] = {
   timezones: {
     defaultTimezone: 'Asia/Jakarta',
   },
-  components: {
-    afterLogin: ['@/payload/components#SingleSignOn'],
-  },
 }

@@ -1,17 +1,23 @@
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { EmailAdapter } from 'payload'
+import { env } from '@/shared/utils/env'
 
 export const emailConfig: Promise<EmailAdapter> = nodemailerAdapter({
-  defaultFromAddress: 'info@payloadcms.com',
-  defaultFromName: 'Payload',
+  defaultFromAddress: env.SMTP_FROM_ADDRESS,
+  defaultFromName: env.SMTP_FROM_NAME,
   transportOptions: {
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,
-    ...(process.env.SMTP_USER &&
-      process.env.SMTP_PASS && {
+    host: env.SMTP_HOST,
+    port: env.SMTP_PORT,
+    ...(env.SMTP_HOST === 'mailpit' && {
+      secure: false,
+      requireTLS: true,
+      ignoreTLS: true,
+    }),
+    ...(env.SMTP_USER &&
+      env.SMTP_PASS && {
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
+          user: env.SMTP_USER,
+          pass: env.SMTP_PASS,
         },
       }),
   },
