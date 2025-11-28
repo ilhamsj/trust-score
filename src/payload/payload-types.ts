@@ -67,13 +67,18 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    articles: Article;
-    media: Media;
-    users: User;
     accounts: Account;
-    sessions: Session;
-    verifications: Verification;
+    articles: Article;
+    contacts: Contact;
+    media: Media;
+    properties: Property;
     roles: Role;
+    segments: Segment;
+    sessions: Session;
+    templates: Template;
+    users: User;
+    verifications: Verification;
+    activities: Activity;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -92,13 +97,18 @@ export interface Config {
     };
   };
   collectionsSelect: {
-    articles: ArticlesSelect<false> | ArticlesSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    users: UsersSelect<false> | UsersSelect<true>;
     accounts: AccountsSelect<false> | AccountsSelect<true>;
-    sessions: SessionsSelect<false> | SessionsSelect<true>;
-    verifications: VerificationsSelect<false> | VerificationsSelect<true>;
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    contacts: ContactsSelect<false> | ContactsSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    properties: PropertiesSelect<false> | PropertiesSelect<true>;
     roles: RolesSelect<false> | RolesSelect<true>;
+    segments: SegmentsSelect<false> | SegmentsSelect<true>;
+    sessions: SessionsSelect<false> | SessionsSelect<true>;
+    templates: TemplatesSelect<false> | TemplatesSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    verifications: VerificationsSelect<false> | VerificationsSelect<true>;
+    activities: ActivitiesSelect<false> | ActivitiesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -154,39 +164,23 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles".
+ * via the `definition` "accounts".
  */
-export interface Article {
+export interface Account {
   id: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  title: string;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  author?: (string | null) | User;
-  image?: (string | null) | Media;
-  publishedAt?: string | null;
-  folder?: (string | null) | FolderInterface;
+  userId: string | User;
+  accountId: string;
+  providerId: string;
+  accessToken?: string | null;
+  refreshToken?: string | null;
+  accessTokenExpiresAt?: string | null;
+  refreshTokenExpiresAt?: string | null;
+  scope?: string | null;
+  idToken?: string | null;
+  password?: string | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -236,26 +230,6 @@ export interface Role {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "accounts".
- */
-export interface Account {
-  id: string;
-  userId: string | User;
-  accountId: string;
-  providerId: string;
-  accessToken?: string | null;
-  refreshToken?: string | null;
-  accessTokenExpiresAt?: string | null;
-  refreshTokenExpiresAt?: string | null;
-  scope?: string | null;
-  idToken?: string | null;
-  password?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "sessions".
  */
 export interface Session {
@@ -268,6 +242,42 @@ export interface Session {
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles".
+ */
+export interface Article {
+  id: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  title: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  author?: (string | null) | User;
+  image?: (string | null) | Media;
+  publishedAt?: string | null;
+  folder?: (string | null) | FolderInterface;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -321,6 +331,84 @@ export interface FolderInterface {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts".
+ */
+export interface Contact {
+  id: string;
+  email: string;
+  name: string;
+  phone?: string | null;
+  address?: string | null;
+  mergeFields?:
+    | {
+        mergeField?: (string | null) | Property;
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  segments?: (string | Segment)[] | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "properties".
+ */
+export interface Property {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "segments".
+ */
+export interface Segment {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "templates".
+ */
+export interface Template {
+  id: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  subject: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  author?: (string | null) | User;
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "verifications".
  */
 export interface Verification {
@@ -336,6 +424,18 @@ export interface Verification {
     | boolean
     | null;
   expiresAt: string;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "activities".
+ */
+export interface Activity {
+  id: string;
+  contact?: (string | Contact)[] | null;
+  activityType: 'click' | 'open' | 'view' | 'send' | 'receive' | 'other';
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -467,32 +567,52 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
+        relationTo: 'accounts';
+        value: string | Account;
+      } | null)
+    | ({
         relationTo: 'articles';
         value: string | Article;
+      } | null)
+    | ({
+        relationTo: 'contacts';
+        value: string | Contact;
       } | null)
     | ({
         relationTo: 'media';
         value: string | Media;
       } | null)
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'properties';
+        value: string | Property;
       } | null)
     | ({
-        relationTo: 'accounts';
-        value: string | Account;
+        relationTo: 'roles';
+        value: string | Role;
+      } | null)
+    | ({
+        relationTo: 'segments';
+        value: string | Segment;
       } | null)
     | ({
         relationTo: 'sessions';
         value: string | Session;
       } | null)
     | ({
+        relationTo: 'templates';
+        value: string | Template;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: string | User;
+      } | null)
+    | ({
         relationTo: 'verifications';
         value: string | Verification;
       } | null)
     | ({
-        relationTo: 'roles';
-        value: string | Role;
+        relationTo: 'activities';
+        value: string | Activity;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -580,66 +700,25 @@ export interface PayloadQueryPreset {
     | number
     | boolean
     | null;
-  relatedCollection: 'articles' | 'media' | 'users' | 'accounts' | 'sessions' | 'verifications' | 'roles';
+  relatedCollection:
+    | 'accounts'
+    | 'articles'
+    | 'contacts'
+    | 'media'
+    | 'properties'
+    | 'roles'
+    | 'segments'
+    | 'sessions'
+    | 'templates'
+    | 'users'
+    | 'verifications'
+    | 'activities';
   /**
    * This is a temporary field used to determine if updating the preset would remove the user's access to it. When `true`, this record will be deleted after running the preset's `validate` function.
    */
   isTemp?: boolean | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles_select".
- */
-export interface ArticlesSelect<T extends boolean = true> {
-  generateSlug?: T;
-  slug?: T;
-  title?: T;
-  content?: T;
-  author?: T;
-  image?: T;
-  publishedAt?: T;
-  folder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  folder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  email?: T;
-  emailVerified?: T;
-  image?: T;
-  roles?: T;
-  accounts?: T;
-  sessions?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -662,26 +741,68 @@ export interface AccountsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sessions_select".
+ * via the `definition` "articles_select".
  */
-export interface SessionsSelect<T extends boolean = true> {
-  userId?: T;
-  token?: T;
-  expiresAt?: T;
-  ipAddress?: T;
-  userAgent?: T;
+export interface ArticlesSelect<T extends boolean = true> {
+  generateSlug?: T;
+  slug?: T;
+  title?: T;
+  content?: T;
+  author?: T;
+  image?: T;
+  publishedAt?: T;
+  folder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts_select".
+ */
+export interface ContactsSelect<T extends boolean = true> {
+  email?: T;
+  name?: T;
+  phone?: T;
+  address?: T;
+  mergeFields?:
+    | T
+    | {
+        mergeField?: T;
+        value?: T;
+        id?: T;
+      };
+  segments?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "verifications_select".
+ * via the `definition` "media_select".
  */
-export interface VerificationsSelect<T extends boolean = true> {
-  identifier?: T;
-  value?: T;
-  expiresAt?: T;
+export interface MediaSelect<T extends boolean = true> {
+  folder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "properties_select".
+ */
+export interface PropertiesSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -706,6 +827,85 @@ export interface RolesSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "segments_select".
+ */
+export interface SegmentsSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sessions_select".
+ */
+export interface SessionsSelect<T extends boolean = true> {
+  userId?: T;
+  token?: T;
+  expiresAt?: T;
+  ipAddress?: T;
+  userAgent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "templates_select".
+ */
+export interface TemplatesSelect<T extends boolean = true> {
+  generateSlug?: T;
+  slug?: T;
+  subject?: T;
+  content?: T;
+  author?: T;
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  emailVerified?: T;
+  image?: T;
+  roles?: T;
+  accounts?: T;
+  sessions?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "verifications_select".
+ */
+export interface VerificationsSelect<T extends boolean = true> {
+  identifier?: T;
+  value?: T;
+  expiresAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "activities_select".
+ */
+export interface ActivitiesSelect<T extends boolean = true> {
+  contact?: T;
+  activityType?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -880,10 +1080,15 @@ export interface TaskSchedulePublish {
   input: {
     type?: ('publish' | 'unpublish') | null;
     locale?: string | null;
-    doc?: {
-      relationTo: 'articles';
-      value: string | Article;
-    } | null;
+    doc?:
+      | ({
+          relationTo: 'articles';
+          value: string | Article;
+        } | null)
+      | ({
+          relationTo: 'templates';
+          value: string | Template;
+        } | null);
     global?: string | null;
     user?: (string | null) | User;
   };
