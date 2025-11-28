@@ -354,6 +354,12 @@ export interface Setting {
   general: {
     name: string;
   };
+  smtp: {
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+  };
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -369,6 +375,7 @@ export interface Template {
    */
   generateSlug?: boolean | null;
   slug: string;
+  from: string;
   subject: string;
   content: {
     root: {
@@ -386,7 +393,6 @@ export interface Template {
     [k: string]: unknown;
   };
   author?: (string | null) | User;
-  publishedAt?: string | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -831,6 +837,14 @@ export interface SettingsSelect<T extends boolean = true> {
     | {
         name?: T;
       };
+  smtp?:
+    | T
+    | {
+        host?: T;
+        port?: T;
+        username?: T;
+        password?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -842,10 +856,10 @@ export interface SettingsSelect<T extends boolean = true> {
 export interface TemplatesSelect<T extends boolean = true> {
   generateSlug?: T;
   slug?: T;
+  from?: T;
   subject?: T;
   content?: T;
   author?: T;
-  publishedAt?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;

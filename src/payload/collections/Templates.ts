@@ -20,6 +20,14 @@ export const Templates: CollectionConfig = {
       },
     }),
     {
+      name: 'from',
+      type: 'email',
+      required: true,
+      admin: {
+        placeholder: 'From email address',
+      },
+    },
+    {
       name: 'subject',
       type: 'text',
       required: true,
@@ -38,18 +46,6 @@ export const Templates: CollectionConfig = {
         position: 'sidebar',
       },
       defaultValue: ({ user }) => user?.id ?? null,
-    },
-    {
-      name: 'publishedAt',
-      type: 'date',
-      admin: {
-        date: {
-          pickerAppearance: 'dayAndTime',
-          minDate: new Date(),
-        },
-        readOnly: true,
-        position: 'sidebar',
-      },
     },
   ],
 }

@@ -20,6 +20,31 @@ export const Settings: CollectionConfig = {
             },
           ],
         },
+        {
+          name: 'smtp',
+          fields: [
+            {
+              name: 'host',
+              type: 'text',
+              required: true,
+            },
+            {
+              name: 'port',
+              type: 'number',
+              required: true,
+            },
+            {
+              name: 'username',
+              type: 'email',
+              required: true,
+            },
+            {
+              name: 'password',
+              type: 'text',
+              required: true,
+            },
+          ],
+        },
       ],
     },
   ],
