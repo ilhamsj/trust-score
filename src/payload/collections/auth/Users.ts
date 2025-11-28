@@ -9,19 +9,18 @@ export const Users: CollectionConfig = {
     group: 'Authentication',
   },
   auth: {
-    ...(env.DISABLE_LOCAL_STRATEGY && { disableLocalStrategy: true }),
+    ...(env.DISABLE_LOCAL_STRATEGY && {
+      disableLocalStrategy: {
+        enableFields: true,
+        optionalPassword: true,
+      },
+    }),
     strategies: [betterAuthStrategy],
   },
   fields: [
     {
       name: 'name',
       type: 'text',
-    },
-    {
-      name: 'email',
-      type: 'text',
-      index: true,
-      unique: true,
     },
     {
       name: 'emailVerified',
