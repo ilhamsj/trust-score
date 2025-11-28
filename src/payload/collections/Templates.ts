@@ -9,16 +9,18 @@ export const Templates: CollectionConfig = {
       schedulePublish: true,
     },
   },
+  admin: {
+    preview: (data) => `/template/${data.id}`,
+    livePreview: {
+      url: ({ data }) => `/template/${data.id}`,
+    },
+  },
   fields: [
-    slugField({
-      fieldToUse: 'title',
-      overrides: (field) => {
-        return {
-          ...field,
-          unique: true,
-        }
-      },
-    }),
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+    },
     {
       name: 'from',
       type: 'email',
@@ -33,9 +35,12 @@ export const Templates: CollectionConfig = {
       required: true,
     },
     {
-      name: 'content',
-      type: 'richText',
+      name: 'code',
+      type: 'code',
       required: true,
+      admin: {
+        language: 'html',
+      },
     },
     {
       name: 'author',
@@ -45,6 +50,7 @@ export const Templates: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
+      hidden: true,
       defaultValue: ({ user }) => user?.id ?? null,
     },
   ],

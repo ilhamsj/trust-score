@@ -370,28 +370,10 @@ export interface Setting {
  */
 export interface Template {
   id: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
+  title: string;
   from: string;
   subject: string;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  code: string;
   author?: (string | null) | User;
   updatedAt: string;
   createdAt: string;
@@ -854,11 +836,10 @@ export interface SettingsSelect<T extends boolean = true> {
  * via the `definition` "templates_select".
  */
 export interface TemplatesSelect<T extends boolean = true> {
-  generateSlug?: T;
-  slug?: T;
+  title?: T;
   from?: T;
   subject?: T;
-  content?: T;
+  code?: T;
   author?: T;
   updatedAt?: T;
   createdAt?: T;
