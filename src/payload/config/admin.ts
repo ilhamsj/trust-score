@@ -1,5 +1,5 @@
 import { Config } from 'payload'
-import { env } from '@/shared/env'
+import { env } from '@/shared/utils/env'
 import { fileURLToPath } from 'url'
 import path from 'path'
 

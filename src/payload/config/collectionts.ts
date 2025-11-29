@@ -1,4 +1,4 @@
-import { Users, Media, Articles } from '@/payload/collections'
+import collections from '@/payload/collections'
 import { CollectionConfig } from 'payload'
 
 const access: CollectionConfig['access'] = {
@@ -11,7 +11,7 @@ const access: CollectionConfig['access'] = {
   delete: () => true,
 }
 
-export const collectionConfig: CollectionConfig[] = [Articles, Media, Users].map<CollectionConfig>(
+export const collectionConfig: CollectionConfig[] = collections.map<CollectionConfig>(
   (collection) => ({
     ...collection,
     access: {

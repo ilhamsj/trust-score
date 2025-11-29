@@ -67,8 +67,14 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    articles: Article;
+    activities: Activity;
+    contacts: Contact;
     media: Media;
+    properties: Property;
+    roles: Role;
+    segments: Segment;
+    settings: Setting;
+    templates: Template;
     users: User;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
@@ -80,12 +86,18 @@ export interface Config {
   };
   collectionsJoins: {
     'payload-folders': {
-      documentsAndFolders: 'payload-folders' | 'articles' | 'media';
+      documentsAndFolders: 'payload-folders' | 'media';
     };
   };
   collectionsSelect: {
-    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    activities: ActivitiesSelect<false> | ActivitiesSelect<true>;
+    contacts: ContactsSelect<false> | ContactsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    properties: PropertiesSelect<false> | PropertiesSelect<true>;
+    roles: RolesSelect<false> | RolesSelect<true>;
+    segments: SegmentsSelect<false> | SegmentsSelect<true>;
+    settings: SettingsSelect<false> | SettingsSelect<true>;
+    templates: TemplatesSelect<false> | TemplatesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -98,6 +110,7 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
+  fallbackLocale: null;
   globals: {
     'payload-jobs-stats': PayloadJobsStat;
   };
@@ -142,64 +155,59 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles".
+ * via the `definition` "activities".
  */
-export interface Article {
+export interface Activity {
   id: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  title: string;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  author?: (string | null) | User;
-  image?: (string | null) | Media;
-  publishedAt?: string | null;
-  folder?: (string | null) | FolderInterface;
+  contact?: (string | Contact)[] | null;
+  activityType: 'click' | 'open' | 'view' | 'send' | 'receive' | 'other';
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "contacts".
  */
-export interface User {
+export interface Contact {
   id: string;
+  email: string;
+  name: string;
+  phone?: string | null;
+  address?: string | null;
+  mergeFields?:
+    | {
+        mergeField?: (string | null) | Property;
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  segments?: (string | Segment)[] | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "properties".
+ */
+export interface Property {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "segments".
+ */
+export interface Segment {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -236,10 +244,6 @@ export interface FolderInterface {
           value: string | FolderInterface;
         }
       | {
-          relationTo?: 'articles';
-          value: string | Article;
-        }
-      | {
           relationTo?: 'media';
           value: string | Media;
         }
@@ -247,9 +251,93 @@ export interface FolderInterface {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  folderType?: ('articles' | 'media')[] | null;
+  folderType?: 'media'[] | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles".
+ */
+export interface Role {
+  id: string;
+  name: string;
+  permissions: {
+    collectionName: 'articles' | 'media' | 'users' | 'accounts' | 'sessions' | 'verifications';
+    access?: {
+      create?: boolean | null;
+      read?: boolean | null;
+      update?: boolean | null;
+      destroy?: boolean | null;
+    };
+    id?: string | null;
+  }[];
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
+export interface Setting {
+  id: string;
+  general: {
+    name: string;
+  };
+  smtp: {
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+  };
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "templates".
+ */
+export interface Template {
+  id: string;
+  title: string;
+  from: string;
+  subject: string;
+  code: string;
+  author?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  name?: string | null;
+  image?: string | null;
+  roles?: (string | Role)[] | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -378,12 +466,36 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
-        relationTo: 'articles';
-        value: string | Article;
+        relationTo: 'activities';
+        value: string | Activity;
+      } | null)
+    | ({
+        relationTo: 'contacts';
+        value: string | Contact;
       } | null)
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'properties';
+        value: string | Property;
+      } | null)
+    | ({
+        relationTo: 'roles';
+        value: string | Role;
+      } | null)
+    | ({
+        relationTo: 'segments';
+        value: string | Segment;
+      } | null)
+    | ({
+        relationTo: 'settings';
+        value: string | Setting;
+      } | null)
+    | ({
+        relationTo: 'templates';
+        value: string | Template;
       } | null)
     | ({
         relationTo: 'users';
@@ -475,7 +587,16 @@ export interface PayloadQueryPreset {
     | number
     | boolean
     | null;
-  relatedCollection: 'articles' | 'media' | 'users';
+  relatedCollection:
+    | 'activities'
+    | 'contacts'
+    | 'media'
+    | 'properties'
+    | 'roles'
+    | 'segments'
+    | 'settings'
+    | 'templates'
+    | 'users';
   /**
    * This is a temporary field used to determine if updating the preset would remove the user's access to it. When `true`, this record will be deleted after running the preset's `validate` function.
    */
@@ -485,21 +606,35 @@ export interface PayloadQueryPreset {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles_select".
+ * via the `definition` "activities_select".
  */
-export interface ArticlesSelect<T extends boolean = true> {
-  generateSlug?: T;
-  slug?: T;
-  title?: T;
-  content?: T;
-  author?: T;
-  image?: T;
-  publishedAt?: T;
-  folder?: T;
+export interface ActivitiesSelect<T extends boolean = true> {
+  contact?: T;
+  activityType?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
-  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts_select".
+ */
+export interface ContactsSelect<T extends boolean = true> {
+  email?: T;
+  name?: T;
+  phone?: T;
+  address?: T;
+  mergeFields?:
+    | T
+    | {
+        mergeField?: T;
+        value?: T;
+        id?: T;
+      };
+  segments?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -522,9 +657,93 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "properties_select".
+ */
+export interface PropertiesSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles_select".
+ */
+export interface RolesSelect<T extends boolean = true> {
+  name?: T;
+  permissions?:
+    | T
+    | {
+        collectionName?: T;
+        access?:
+          | T
+          | {
+              create?: T;
+              read?: T;
+              update?: T;
+              destroy?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "segments_select".
+ */
+export interface SegmentsSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings_select".
+ */
+export interface SettingsSelect<T extends boolean = true> {
+  general?:
+    | T
+    | {
+        name?: T;
+      };
+  smtp?:
+    | T
+    | {
+        host?: T;
+        port?: T;
+        username?: T;
+        password?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "templates_select".
+ */
+export interface TemplatesSelect<T extends boolean = true> {
+  title?: T;
+  from?: T;
+  subject?: T;
+  code?: T;
+  author?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  image?: T;
+  roles?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -714,8 +933,8 @@ export interface TaskSchedulePublish {
     type?: ('publish' | 'unpublish') | null;
     locale?: string | null;
     doc?: {
-      relationTo: 'articles';
-      value: string | Article;
+      relationTo: 'templates';
+      value: string | Template;
     } | null;
     global?: string | null;
     user?: (string | null) | User;

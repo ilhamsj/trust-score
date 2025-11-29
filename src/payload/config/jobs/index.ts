@@ -1,7 +1,7 @@
 import { JobsConfig } from 'payload'
 import { taskSendingEmail } from './tasks'
 import { workflowNewUser } from './workflows'
-import { env } from '@/shared/env'
+import { env } from '@/shared/utils/env'
 
 export const jobsConfig: JobsConfig = {
   jobsCollectionOverrides: ({ defaultJobsCollection }) => {

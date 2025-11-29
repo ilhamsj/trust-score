@@ -1,0 +1,20 @@
+networks:
+  universe:
+    external: true
+
+services:
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: unless-stopped
+    volumes:
+      - ./data/mailpit:/data
+      - ./certs:/certs
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+    networks:
+      - universe
