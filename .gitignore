@@ -52,3 +52,5 @@ node_modules/
 /playwright/.cache/
 
 data
+
+.env.docker
