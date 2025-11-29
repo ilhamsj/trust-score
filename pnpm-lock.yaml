@@ -38,6 +38,9 @@ importers:
       grapesjs:
         specifier: ^0.22.14
         version: 0.22.14
+      grapesjs-blocks-basic:
+        specifier: ^1.0.2
+        version: 1.0.2
       grapesjs-preset-newsletter:
         specifier: ^1.0.2
         version: 1.0.2
@@ -2611,6 +2614,9 @@ packages:
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
+
+  grapesjs-blocks-basic@1.0.2:
+    resolution: {integrity: sha512-SsPKf/CvQkZ+kABOsN01auAPHXh/2J20g0AWYF7fHR3Gw3TZLtdIxT1mk90Qzi76u/7sUYi3CTI+i3ZaTtXHRA==}
 
   grapesjs-preset-newsletter@1.0.2:
     resolution: {integrity: sha512-z8KJ1ZrTXfASSJZ/tHOcnpcWu4AMr2F/ZfQit+QjimNi3UGowwl7+Yjefuh3R7lbDTrXMMaxhCannCaJo/kPJw==}
@@ -7235,6 +7241,8 @@ snapshots:
   globrex@0.1.2: {}
 
   gopd@1.2.0: {}
+
+  grapesjs-blocks-basic@1.0.2: {}
 
   grapesjs-preset-newsletter@1.0.2: {}
 

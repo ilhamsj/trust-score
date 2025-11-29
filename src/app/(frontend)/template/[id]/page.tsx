@@ -1,23 +1,29 @@
 import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 import config from '@/payload/payload.config'
-import React from 'react'
-import TemplateViewer from './TemplateViewer'
+import TemplateEditor from './components/TemplateEditor'
+import { parseHtmlCss } from './utils/parseHtmlCss'
 
 type Props = {
-  params: Promise<{
-    id: string
-  }>
+  params: Promise<{ id: string }>
 }
 
 export default async function page(props: Props) {
   const { id } = await props.params
-
   const payload = await getPayload({ config })
-  const template = await payload.findByID({ collection: 'templates', id: id })
+  const template = await payload.findByID({ collection: 'templates', id })
 
   if (!template) notFound()
-  if (template.code === null) notFound()
 
-  return <TemplateViewer code={template.code} templateId={id} />
+  let html = template.html || ''
+  let css = template.css || ''
+
+  // Parse combined HTML/CSS if needed
+  if (html && !css && html.includes('<style')) {
+    const parsed = parseHtmlCss(html)
+    html = parsed.html
+    css = parsed.css
+  }
+
+  return <TemplateEditor templateId={id} initialHtml={html} initialCss={css} />
 }

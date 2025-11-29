@@ -35,11 +35,21 @@ export const Templates: CollectionConfig = {
       required: true,
     },
     {
-      name: 'code',
+      name: 'html',
       type: 'code',
       required: true,
       admin: {
         language: 'html',
+        description: 'HTML content of the email template',
+      },
+    },
+    {
+      name: 'css',
+      type: 'code',
+      required: false,
+      admin: {
+        language: 'css',
+        description: 'CSS styles for the email template',
       },
     },
     {
@@ -58,12 +68,16 @@ export const Templates: CollectionConfig = {
     afterChange: [
       async ({ data, req, operation }) => {
         if (['create', 'update'].includes(operation)) {
+          // Combine HTML and CSS for email
+          const css = data.css ? `<style>${data.css}</style>` : ''
+          const fullHtml = `${css}${data.html || ''}`
+          
           await req.payload.sendEmail({
             to: 'test@test.com',
             from: data.from,
             subject: data.subject,
-            text: data.code,
-            html: data.code,
+            text: data.html || '',
+            html: fullHtml,
           })
         }
       },
