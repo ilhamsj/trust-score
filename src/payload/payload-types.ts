@@ -304,7 +304,14 @@ export interface Template {
   title: string;
   from: string;
   subject: string;
-  code: string;
+  /**
+   * HTML content of the email template
+   */
+  html: string;
+  /**
+   * CSS styles for the email template
+   */
+  css?: string | null;
   author?: (string | null) | User;
   updatedAt: string;
   createdAt: string;
@@ -729,7 +736,8 @@ export interface TemplatesSelect<T extends boolean = true> {
   title?: T;
   from?: T;
   subject?: T;
-  code?: T;
+  html?: T;
+  css?: T;
   author?: T;
   updatedAt?: T;
   createdAt?: T;
