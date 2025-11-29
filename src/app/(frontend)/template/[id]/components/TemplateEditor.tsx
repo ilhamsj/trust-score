@@ -13,7 +13,7 @@ type GrapesJSEditor = {
   destroy: () => void
 }
 
-export default function TemplateViewer({ code, templateId }: { code: string; templateId: string }) {
+export default function TemplateEditor({ code, templateId }: { code: string; templateId: string }) {
   const editorRef = useRef<HTMLDivElement>(null)
   const grapesjsRef = useRef<GrapesJSEditor | null>(null)
   const [isSaving, setIsSaving] = useState(false)
@@ -95,12 +95,11 @@ export default function TemplateViewer({ code, templateId }: { code: string; tem
 
   return (
     <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
-      {/* Save Button */}
       <div
         style={{
           position: 'fixed',
-          top: '20px',
-          right: '20px',
+          bottom: '20px',
+          left: '20px',
           zIndex: 1000,
           display: 'flex',
           flexDirection: 'column',
@@ -142,7 +141,6 @@ export default function TemplateViewer({ code, templateId }: { code: string; tem
         </button>
       </div>
 
-      {/* GrapesJS Editor Container */}
       <div ref={editorRef} />
     </div>
   )

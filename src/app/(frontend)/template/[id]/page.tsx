@@ -2,7 +2,7 @@ import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 import config from '@/payload/payload.config'
 import React from 'react'
-import TemplateViewer from './TemplateViewer'
+import TemplateEditor from './components/TemplateEditor'
 
 type Props = {
   params: Promise<{
@@ -19,5 +19,5 @@ export default async function page(props: Props) {
   if (!template) notFound()
   if (template.code === null) notFound()
 
-  return <TemplateViewer code={template.code} templateId={id} />
+  return <TemplateEditor code={template.code} templateId={id} />
 }

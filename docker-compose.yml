@@ -25,7 +25,10 @@ services:
       - 3000
     ports:
       - 3001:3000
-    env_file:
-      - .env.docker
+    environment:
+      DATABASE_URI: mongodb://root:root@mongo:27017/payload?authSource=admin
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      DISABLE_LOCAL_STRATEGY: false
     networks:
       - universe
