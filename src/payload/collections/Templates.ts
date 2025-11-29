@@ -54,4 +54,19 @@ export const Templates: CollectionConfig = {
       defaultValue: ({ user }) => user?.id ?? null,
     },
   ],
+  hooks: {
+    afterChange: [
+      async ({ data, req, operation }) => {
+        if (['create', 'update'].includes(operation)) {
+          await req.payload.sendEmail({
+            to: 'test@test.com',
+            from: data.from,
+            subject: data.subject,
+            text: data.code,
+            html: data.code,
+          })
+        }
+      },
+    ],
+  },
 }

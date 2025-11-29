@@ -19,5 +19,5 @@ export default async function page(props: Props) {
   if (!template) notFound()
   if (template.code === null) notFound()
 
-  return <TemplateViewer code={template.code} />
+  return <TemplateViewer code={template.code} templateId={id} />
 }

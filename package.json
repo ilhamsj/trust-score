@@ -27,6 +27,8 @@
     "better-auth": "^1.4.1",
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",
+    "grapesjs": "^0.22.14",
+    "grapesjs-preset-newsletter": "^1.0.2",
     "graphql": "^16.8.1",
     "next": "15.4.7",
     "nodemailer": "^7.0.11",
